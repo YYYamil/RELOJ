@@ -22,6 +22,8 @@ SPDX-License-Identifier: MIT
 
 /** @file digital.h
  ** @brief Declaraciones del modulo para la gestion de entrada y salidas digitales
+ ** puedo agregar explicacio extra a mi archivo
+
  **/
 
 /* === Headers files inclusions ==================================================================================== */
@@ -37,18 +39,27 @@ extern "C" {
 
 /* === Public data type declarations =============================================================================== */
 
+typedef enum digital_states_e {
+        DIGITAL_INPUT_WAS_DETECTED = -1,
+        DITITAL_INPUT_NO_CHANGE =0,
+        DIGITAL INPUT WAS ACTIVATED=1,
+} digital_sttes_t
+
 //! Estructura que representa una salida digital
 
 typedef struct digital_output_s * digital_output_t;
+
+typedef struct digital_input_s * digital_input_t;
 
 /* === Public variable declarations ================================================================================ */
 
 /* === Public function declarations ================================================================================ */
 
 /**
- * @brief Funcion para crear una salida .-NombredeclaseMetodo - nos quedamos 2 para funcionar con un puerto y un pin
+ * @brief Funcion para crear una salida digital.-NombredeclaseMetodo - nos quedamos 2 para funcionar con un puerto y un pin
  *
- * @param port
+ * @ref para terminar explicar mi funcion en la parte de arriba
+ *  * @param port
  * @param pin
  * @return digital_output_t
 
@@ -75,6 +86,17 @@ void DigitalOutputDeactivate(digital_output_t self);
  * @param self
  */
 void DigitalOutputToggle(digital_output_t self);
+
+
+//************* teoria 14-5 AGREGAMOS LAS ENTRADAS
+digital_input_t DigitalInputCreate(uint8_t gpio, uint8_t bit, bool inverted);   //agrego un 3er parametro que define la logica invertida o entrada
+
+
+bool digital_input_t DigitalInputGetIsActive(digital_input_t input);
+
+bool DigitalWasActivated(igital_input_t input);
+bool DigitalWasDeactivated(igital_input_t input);
+int DigitalWasChanged(igital_input_t input); //no te fijas si es uno, si no si cambio
 
 /* === End of conditional blocks =================================================================================== */
 

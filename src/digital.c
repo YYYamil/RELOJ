@@ -40,6 +40,13 @@ struct digital_output_s {
     uint8_t pin;  /*< Pin al que pertenece la salida*/
 };
 
+
+struct digital input_s{
+    uint8_t port;
+    uint8_t pin;
+    bool inverted;
+    bool lastState;
+}
 /* === Private function declarations =============================================================================== */
 
 /* === Private variable definitions ================================================================================ */
@@ -64,6 +71,44 @@ void DigitalOutpuDeactivate(digital_output_t self) {
 }
 void DigitalOutputToggle(digital_output_t self) {
     Chip_GPIO_SetPinToggle(LPC_GPIO_PORT, self->port, self->pin);
+}
+
+
+//Agrego entradas en teoria:
+
+digital_input_t DigitalInputCreate(uint8_t gpio, uint8_bit, bool inverted){
+    
+}
+
+bool digital_input_t DigitalInputGetIsActive(digital_input_t input){
+        return true;
+
+}
+
+bool DigitalWasActivated(igital_input_t input){
+    bool state = true; // llamar a la funcion del fabricante comparar on 1
+    if (self->inverted){
+        state = !state;
+        
+    }
+    return state;
+}
+bool DigitalWasDeactivated(igital_input_t input){
+    return DIGITAL_INPUT_WAS_ACTIVATE == DigitalWasChanged(self);
+}
+
+int DigitalWasChanged(igital_input_t input){
+    digital_states_t result = DIGITAL_INPUT_NO_CHANGE;
+    bool state= DigtialInputGetIsActivate(self);
+    if (state!= self->lastState){
+            result = DIGITAL_INPUT_WAS_ACTIVATED;
+
+    } else if (!state && self->lastState){
+        result = DIGITAL_INPUT_WAS_DEACTIVATED;
+    }
+
+    self->lastState =state;
+    return result;
 }
 
 /* === End of documentation ======================================================================================== */
