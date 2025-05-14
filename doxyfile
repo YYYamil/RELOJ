@@ -4,7 +4,7 @@
 PROJECT_NAME           = "Laboratorio E IV"
 
 # Directorio donde se genera la documentación
-OUTPUT_DIRECTORY       = doc
+OUTPUT_DIRECTORY       = build/doc
 
 # Generar salida HTML
 GENERATE_HTML          = YES
