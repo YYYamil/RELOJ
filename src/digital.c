@@ -1,5 +1,5 @@
 /*********************************************************************************************************************
-Copyright (c) Año, Nombre y Apellido del autor <correo@ejemplo.com>
+Copyright (c) 2025, Tolaba Yamil <yamiltolaba@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -91,31 +91,33 @@ void DigitalOutputToggle(digital_output_t self) {
  * @brief Funcion para crear una Entrada digital
  * 
  */
-
- 
- 
- digital_input_t DigitalInputCreate(uint8_t gpio, uint8_t bit, bool inverted){
+digital_input_t DigitalInputCreate(uint8_t gpio, uint8_t bit, bool inverted){
     digital_input_t self = malloc(sizeof(struct digital_input_s));
     if (self != NULL) {
-        self->port = port;
-        self->pin = pin;
+        self->port = gpio;
+        self->pin = bit;
         self->inverted= inverted;
-        self->lastState= DigitalInputGetIsActive(self);
-
+        
+        // Configuración SCU para la entrada (pull-up para teclas activas bajas)
+        self->lastState = Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, gpio, bit); // Inicializa con el estado real del pin
+        if (self->inverted) {
+            self->lastState = !self->lastState; // Aplica inversión si es necesario
+        }
        
     }
     return self;
  }
  
- bool DigitalInputGetIsActive(digital_input_t input){
-    bool state = true;  // llama a la funciona del fabricante
+ bool DigitalInputGetIsActive(digital_input_t self){
+    bool state = Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, self->port, self->pin);// llama a la funciona del fabricante
     if (self->inverted){
         state=!state;
     }
     return state;
  }
  
- digital_states_t DigitalWasChanged(digital_input_t input){
+ digital_states_t DigitalInputWasChanged(digital_input_t self){
+    if (self != NULL) {
     digital_states_t result = DIGITAL_INPUT_WAS_NO_CHANGE;
 
     bool state = DigitalInputGetIsActive(self);
@@ -128,14 +130,16 @@ void DigitalOutputToggle(digital_output_t self) {
     }
     self->lastState = state;
     return result;
- }
+    }
+ return DIGITAL_INPUT_WAS_NO_CHANGE; // Valor por defecto si self es NULL
+}
 
 
- bool DigitalWasActivated(digital_input_t input){
-    return DIGITAL_INPUT_WAS_ACTIVATED == DigitalWasChanged(self);
+ bool DigitalInputWasActivated(digital_input_t self){
+    return DIGITAL_INPUT_WAS_ACTIVATED == DigitalInputWasChanged(self);
  }
- bool DigitalWasDeactivated(digital_input_t input){
-        return DIGITAL_INPUT_WAS_DEACTIVATED == DigitalWasChanged(self);
+ bool DigitalInputWasDeactivated(digital_input_t self){
+        return DIGITAL_INPUT_WAS_DEACTIVATED == DigitalInputWasChanged(self);
 
  }
  

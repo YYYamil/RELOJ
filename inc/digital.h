@@ -1,5 +1,6 @@
 /*********************************************************************************************************************
-Copyright (c) Año, Nombre y Apellido del autor <correo@ejemplo.com>
+Copyright (c) Copyright (c) 2025, Tolaba Yamil <yamiltolaba@gmail.com>
+
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -26,7 +27,9 @@ SPDX-License-Identifier: MIT
 
 /* === Headers files inclusions ==================================================================================== */
 
+#include <stdbool.h>
 #include <stdint.h>
+
 /* === Header for C++ compatibility ================================================================================ */
 
 #ifdef __cplusplus
@@ -44,9 +47,9 @@ typedef struct digital_output_s * digital_output_t;
 typedef struct digital_input_s * digital_input_t;
 
 typedef enum digital_states_e {
-    DIGITAL_INPUT_WAS_DEACTIVATED =-1,
-    DIGITAL_INPUT_WAS_NO_CHANGE =0,
-    DIGITAL_INPUT_WAS_ACTIVATED =1,
+    DIGITAL_INPUT_WAS_DEACTIVATED = -1,
+    DIGITAL_INPUT_WAS_NO_CHANGE = 0,
+    DIGITAL_INPUT_WAS_ACTIVATED = 1,
 } digital_states_t;
 
 /* === Public variable declarations ================================================================================ */
@@ -58,9 +61,9 @@ typedef enum digital_states_e {
 /**
  * @brief Funcion para crear una salida .-NombredeclaseMetodo - nos quedamos 2 para funcionar con un puerto y un pin
  *
- * @param port
- * @param pin
- * @return digital_output_t
+ * @param port  Puerto que se utiliza
+ * @param pin   Bit utilizado
+ * @return digital_output_t Puntero a una salida digital
 
  */
 digital_output_t DigitalOutputCreate(uint8_t port, uint8_t pin);
@@ -89,17 +92,20 @@ void DigitalOutputToggle(digital_output_t self);
 /*===================Configurando Entradas=============0*/
 /**
  * @brief Funcion para crear una Entrada digital
- * 
+ *
+ * @param gpio  Puerto gpio utilizado
+ * @param bit   Bit utilizado
+ * @param inverted Puntero a una entrada
  */
 
- digital_input_t DigitalInputCreate(uint8_t gpio, uint8_t bit, bool inverted);
- 
- bool DigitalInputGetIsActive(digital_input_t input);
- 
- bool DigitalWasActivated(digital_input_t input);
- bool DigitalWasDeactivated(digital_input_t input);
- 
- enum digital_states_e DigitalWasChanged(digital_input_t input);
+digital_input_t DigitalInputCreate(uint8_t gpio, uint8_t bit, bool inverted);
+
+bool DigitalInputGetIsActive(digital_input_t input);
+
+bool DigitalInputWasActivated(digital_input_t input);
+bool DigitalInputWasDeactivated(digital_input_t self);
+
+enum digital_states_e DigitalInputWasChanged(digital_input_t input);
 
 /* === End of conditional blocks =================================================================================== */
 
