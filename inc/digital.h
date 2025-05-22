@@ -38,12 +38,22 @@ extern "C" {
 /* === Public data type declarations =============================================================================== */
 
 //! Estructura que representa una salida digital
-
 typedef struct digital_output_s * digital_output_t;
+
+//! Estructura que representa una Entrada digital
+typedef struct digital_input_s * digital_input_t;
+
+typedef enum digital_states_e {
+    DIGITAL_INPUT_WAS_DEACTIVATED =-1,
+    DIGITAL_INPUT_WAS_NO_CHANGE =0,
+    DIGITAL_INPUT_WAS_ACTIVATED =1,
+} digital_states_t;
 
 /* === Public variable declarations ================================================================================ */
 
 /* === Public function declarations ================================================================================ */
+
+/*===================Configurando Salidas=============0*/
 
 /**
  * @brief Funcion para crear una salida .-NombredeclaseMetodo - nos quedamos 2 para funcionar con un puerto y un pin
@@ -75,6 +85,21 @@ void DigitalOutputDeactivate(digital_output_t self);
  * @param self
  */
 void DigitalOutputToggle(digital_output_t self);
+
+/*===================Configurando Entradas=============0*/
+/**
+ * @brief Funcion para crear una Entrada digital
+ * 
+ */
+
+ digital_input_t DigitalInputCreate(uint8_t gpio, uint8_t bit, bool inverted);
+ 
+ bool DigitalInputGetIsActive(digital_input_t input);
+ 
+ bool DigitalWasActivated(digital_input_t input);
+ bool DigitalWasDeactivated(digital_input_t input);
+ 
+ enum digital_states_e DigitalWasChanged(digital_input_t input);
 
 /* === End of conditional blocks =================================================================================== */
 
