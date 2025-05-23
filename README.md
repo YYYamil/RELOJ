@@ -1,3 +1,3 @@
-# Laboratorio1
-Desarrollo del Laboratorio Nº 1 de E IV
+# Laboratorio
+Desarrollo del Laboratorio Nº 4 de E IV
 Alumno: Yamil Tolaba
