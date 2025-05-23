@@ -22,7 +22,7 @@ SPDX-License-Identifier: MIT
 #define BOARD_H_
 
 /** @file board.h
- ** @brief Declaraciones para la capa de placa específica
+ ** @brief Declaraciones para la inicializacion de placa.
  **/
 
 /* === Headers files inclusions ==================================================================================== */
@@ -46,7 +46,7 @@ extern "C" {
 /* === Public function declarations ================================================================================ */
 
 /**
- * @brief Inicializa los pines de la placa (LEDs y teclas)
+ * @brief Inicializa los pines de la placa para los LEDs y las teclas.
  */
 void BoardInitialize(void);
 

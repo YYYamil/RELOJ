@@ -1,8 +1,4 @@
-/* Copyright 2022, Laboratorio de Microprocesadores
- * Facultad de Ciencias Exactas y Tecnología
- * Universidad Nacional de Tucuman
- * http://www.microprocesadores.unt.edu.ar/
- * Copyright 2022, Esteban Volentini <evolentini@herrera.unt.edu.ar>
+/* Copyright (c) 2025, Tolaba Yamil <yamiltolaba@gmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,69 +39,11 @@
 #include "chip.h"
 #include <stdbool.h>
 
+#include "board.h"
+#include "cia.h"
 #include "digital.h"
 
 /* === Macros definitions ====================================================================== */
-
-#define LED_R_PORT 2
-#define LED_R_PIN 0
-#define LED_R_FUNC SCU_MODE_FUNC4
-#define LED_R_GPIO 5
-#define LED_R_BIT 0/* data */
-
-#define LED_G_PORT 2
-#define LED_G_PIN 1
-#define LED_G_FUNC SCU_MODE_FUNC4
-#define LED_G_GPIO 5
-#define LED_G_BIT 1
-
-#define LED_B_PORT 2
-#define LED_B_PIN 2
-#define LED_B_FUNC SCU_MODE_FUNC4
-#define LED_B_GPIO 5
-#define LED_B_BIT 2
-
-#define LED_1_PORT 2
-#define LED_1_PIN 10
-#define LED_1_FUNC SCU_MODE_FUNC0
-#define LED_1_GPIO 0
-#define LED_1_BIT 14
-
-#define LED_2_PORT 2
-#define LED_2_PIN 11
-#define LED_2_FUNC SCU_MODE_FUNC0
-#define LED_2_GPIO 1
-#define LED_2_BIT 11
-
-#define LED_3_PORT 2
-#define LED_3_PIN 12
-#define LED_3_FUNC SCU_MODE_FUNC0
-#define LED_3_GPIO 1
-#define LED_3_BIT 12
-
-#define TEC_1_PORT 1
-#define TEC_1_PIN 0
-#define TEC_1_FUNC SCU_MODE_FUNC0
-#define TEC_1_GPIO 0
-#define TEC_1_BIT 4
-
-#define TEC_2_PORT 1
-#define TEC_2_PIN 1
-#define TEC_2_FUNC SCU_MODE_FUNC0
-#define TEC_2_GPIO 0
-#define TEC_2_BIT 8
-
-#define TEC_3_PORT 1
-#define TEC_3_PIN 2
-#define TEC_3_FUNC SCU_MODE_FUNC0
-#define TEC_3_GPIO 0
-#define TEC_3_BIT 9
-
-#define TEC_4_PORT 1
-#define TEC_4_PIN 6
-#define TEC_4_FUNC SCU_MODE_FUNC0
-#define TEC_4_GPIO 1
-#define TEC_4_BIT 9
 
 /* === Private data type declarations ========================================================== */
 
@@ -122,17 +60,19 @@
 /* === Public function implementation ========================================================= */
 
 int main(void) {
+
+    // Inicializar la placa
+    BoardInitialize();
+
     digital_output_t led_green = DigitalOutputCreate(LED_3_GPIO, LED_3_BIT);
     digital_output_t led_blue = DigitalOutputCreate(LED_B_GPIO, LED_B_BIT);
     digital_output_t led_1 = DigitalOutputCreate(LED_1_GPIO, LED_1_BIT);
     digital_output_t led_2 = DigitalOutputCreate(LED_2_GPIO, LED_2_BIT);
-    
-    int divisor  = 0;
-    //bool current_state, last_state = false;
 
+    int divisor = 0;
+    // bool current_state, last_state = false;
 
-    // Crear instancia de entrada para TEC_1 (activo bajo, inverted = true)
-// Crear instancias de entradas digitales (teclas activas bajas)
+    // Crear instancias de entradas digitales (teclas activas bajas)
     digital_input_t key_push = DigitalInputCreate(TEC_1_GPIO, TEC_1_BIT, true);
     digital_input_t key_toggle = DigitalInputCreate(TEC_2_GPIO, TEC_2_BIT, true);
     digital_input_t key_turn_on = DigitalInputCreate(TEC_3_GPIO, TEC_3_BIT, true);
@@ -147,18 +87,15 @@ int main(void) {
     Chip_GPIO_SetPinState(LPC_GPIO_PORT, LED_G_GPIO, LED_G_BIT, false);
     Chip_GPIO_SetPinDIR(LPC_GPIO_PORT, LED_G_GPIO, LED_G_BIT, true);
 
-
     Chip_SCU_PinMuxSet(LED_B_PORT, LED_B_PIN, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | LED_B_FUNC);
-    
+
     /******************/
     Chip_SCU_PinMuxSet(LED_1_PORT, LED_1_PIN, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | LED_1_FUNC);
-    
-    Chip_SCU_PinMuxSet(LED_2_PORT, LED_2_PIN, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | LED_2_FUNC);
-    
-    Chip_SCU_PinMuxSet(LED_3_PORT, LED_3_PIN, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | LED_3_FUNC);
-    
 
-    
+    Chip_SCU_PinMuxSet(LED_2_PORT, LED_2_PIN, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | LED_2_FUNC);
+
+    Chip_SCU_PinMuxSet(LED_3_PORT, LED_3_PIN, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | LED_3_FUNC);
+
     /******************/
     Chip_SCU_PinMuxSet(TEC_1_PORT, TEC_1_PIN, SCU_MODE_INBUFF_EN | SCU_MODE_PULLUP | TEC_1_FUNC);
 
@@ -170,7 +107,9 @@ int main(void) {
 
     while (true) {
         // Control del LED azul (LED_B) con TEC_1
-        if (DigitalInputGetIsActive(key_push)) { // Reemplaza Chip_GPIO_ReadPortBit == 0            DigitalOutputActivate(led_blue); // Reemplazamos Chip_GPIO_SetPinState
+        if (DigitalInputGetIsActive(
+                key_push)) { // Reemplaza Chip_GPIO_ReadPortBit == 0            DigitalOutputActivate(led_blue); //
+                             // Reemplazamos Chip_GPIO_SetPinState
             DigitalOutputActivate(led_blue);
         } else {
             DigitalOutputDeactivate(led_blue); // Reemplazamos Chip_GPIO_SetPinState
@@ -182,23 +121,23 @@ int main(void) {
         }
 
         // Control del LED_2 con TEC_3 y TEC_4
-        if (DigitalInputGetIsActive(key_turn_on)) { 
-                       DigitalOutputActivate(led_2); // Reemplazamos Chip_GPIO_SetPinState
+        if (DigitalInputGetIsActive(key_turn_on)) {
+            DigitalOutputActivate(led_2); // Reemplazamos Chip_GPIO_SetPinState
         }
         if (DigitalInputGetIsActive(key_turn_off)) {
-                DigitalOutputDeactivate(led_2); // Reemplazamos Chip_GPIO_SetPinState
+            DigitalOutputDeactivate(led_2); // Reemplazamos Chip_GPIO_SetPinState
         }
 
         divisor++;
         if (divisor == 5) {
             divisor = 0;
 
-            DigitalOutputToggle(led_green);//Led Verde parpadeando
+            DigitalOutputToggle(led_green); // Led Verde parpadeando
         }
 
         for (int index = 0; index < 100; index++) {
             for (int delay = 0; delay < 25000; delay++) {
-                __asm("NOP");// estoy ejecutando 25millones de veces una funcion que no hace nada
+                __asm("NOP"); // estoy ejecutando 25millones de veces una funcion que no hace nada
             }
         }
     }

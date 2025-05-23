@@ -45,9 +45,7 @@ struct digital_input_s {
     uint8_t pin;  /*< Pin al que pertenece la entrada*/
     bool inverted;
     bool lastState;
-
 };
-
 
 /* === Private function declarations =============================================================================== */
 
@@ -63,10 +61,9 @@ digital_output_t DigitalOutputCreate(uint8_t port, uint8_t pin) {
     if (self != NULL) {
         self->port = port;
         self->pin = pin;
-            Chip_SCU_PinMuxSet(port, pin, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC0);
-            Chip_GPIO_SetPinDIR(LPC_GPIO_PORT, port, pin, true); // Configura como salida
-            Chip_GPIO_SetPinState(LPC_GPIO_PORT, port, pin, false); // Estado inicial apagado
-        
+        Chip_SCU_PinMuxSet(port, pin, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC0);
+        Chip_GPIO_SetPinDIR(LPC_GPIO_PORT, port, pin, true);    // Configura como salida
+        Chip_GPIO_SetPinState(LPC_GPIO_PORT, port, pin, false); // Estado inicial apagado
     }
     return self;
 }
@@ -85,63 +82,58 @@ void DigitalOutputToggle(digital_output_t self) {
     Chip_GPIO_SetPinToggle(LPC_GPIO_PORT, self->port, self->pin);
 }
 
-
 /*===================Configurando Entradas=============0*/
 /**
  * @brief Funcion para crear una Entrada digital
- * 
+ *
  */
-digital_input_t DigitalInputCreate(uint8_t gpio, uint8_t bit, bool inverted){
+digital_input_t DigitalInputCreate(uint8_t gpio, uint8_t bit, bool inverted) {
     digital_input_t self = malloc(sizeof(struct digital_input_s));
     if (self != NULL) {
         self->port = gpio;
         self->pin = bit;
-        self->inverted= inverted;
-        
+        self->inverted = inverted;
+
         // Configuración SCU para la entrada (pull-up para teclas activas bajas)
         self->lastState = Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, gpio, bit); // Inicializa con el estado real del pin
         if (self->inverted) {
             self->lastState = !self->lastState; // Aplica inversión si es necesario
         }
-       
     }
     return self;
- }
- 
- bool DigitalInputGetIsActive(digital_input_t self){
-    bool state = Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, self->port, self->pin);// llama a la funciona del fabricante
-    if (self->inverted){
-        state=!state;
-    }
-    return state;
- }
- 
- digital_states_t DigitalInputWasChanged(digital_input_t self){
-    if (self != NULL) {
-    digital_states_t result = DIGITAL_INPUT_WAS_NO_CHANGE;
-
-    bool state = DigitalInputGetIsActive(self);
-
-    if(state && self->lastState){
-        result= DIGITAL_INPUT_WAS_ACTIVATED;
-
-    }else if(!state && self->lastState){
-        result= DIGITAL_INPUT_WAS_DEACTIVATED;
-    }
-    self->lastState = state;
-    return result;
-    }
- return DIGITAL_INPUT_WAS_NO_CHANGE; // Valor por defecto si self es NULL
 }
 
+bool DigitalInputGetIsActive(digital_input_t self) {
+    bool state = Chip_GPIO_ReadPortBit(LPC_GPIO_PORT, self->port, self->pin); // llama a la funciona del fabricante
+    if (self->inverted) {
+        state = !state;
+    }
+    return state;
+}
 
- bool DigitalInputWasActivated(digital_input_t self){
+digital_states_t DigitalInputWasChanged(digital_input_t self) {
+    if (self != NULL) {
+        digital_states_t result = DIGITAL_INPUT_WAS_NO_CHANGE;
+
+        bool state = DigitalInputGetIsActive(self);
+
+        if (state && self->lastState) {
+            result = DIGITAL_INPUT_WAS_ACTIVATED;
+
+        } else if (!state && self->lastState) {
+            result = DIGITAL_INPUT_WAS_DEACTIVATED;
+        }
+        self->lastState = state;
+        return result;
+    }
+    return DIGITAL_INPUT_WAS_NO_CHANGE; // Valor por defecto si self es NULL
+}
+
+bool DigitalInputWasActivated(digital_input_t self) {
     return DIGITAL_INPUT_WAS_ACTIVATED == DigitalInputWasChanged(self);
- }
- bool DigitalInputWasDeactivated(digital_input_t self){
-        return DIGITAL_INPUT_WAS_DEACTIVATED == DigitalInputWasChanged(self);
+}
+bool DigitalInputWasDeactivated(digital_input_t self) {
+    return DIGITAL_INPUT_WAS_DEACTIVATED == DigitalInputWasChanged(self);
+}
 
- }
- 
- 
 /* === End of documentation ======================================================================================== */
