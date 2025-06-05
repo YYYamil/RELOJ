@@ -17,17 +17,18 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 SPDX-License-Identifier: MIT
 *********************************************************************************************************************/
-#ifndef BSP_H_
-#define BSP_H_
 
-/** @file bsp.h
- ** @brief Declaraciones para la capa de placa específica
+#ifndef SCREEN_H_
+#define SCREEN_H_
+
+/** @file screen.h
+ ** @brief Declaraciones del modulo para la gestion de PANTALLA MULTIPLEXADA
  **/
 
 /* === Headers files inclusions ==================================================================================== */
 
-#include "digital.h"
 #include <stdbool.h>
+#include <stdint.h>
 
 /* === Header for C++ compatibility ================================================================================ */
 
@@ -35,45 +36,23 @@ SPDX-License-Identifier: MIT
 extern "C" {
 #endif
 
+/* === Public macros definitions =================================================================================== */
+
+typedef struct screen_s * screen_t;
+
 /* === Public data type declarations =============================================================================== */
 
-/**
- * @brief Estructura que representa el objeto de la placa
- */
-typedef struct board_s * board_t;
 
-/**
- * @brief Estructura interna que representa la placa
- */
-struct board_s {
-    /*digital_output_t led_green;
-    digital_output_t led_blue;
-    digital_output_t led_1;
-    digital_output_t led_2;
-    // Crear instancias de entradas digitales (teclas activas bajas)
-    digital_input_t key_push;
-    digital_input_t key_toggle;
-    digital_input_t key_turn_on;
-    digital_input_t key_turn_off;*/
-    digital_output_t buzzer;
-digital_input_t set_time;
-digital_input_t set_alarm;
-digital_input_t decrement;
-digital_input_t increment;
-digital_input_t accept;
-digital_input_t cancel;
-display_t display;
 
-}const * const board_t;
+/* === Public variable declarations ================================================================================ */
 
 /* === Public function declarations ================================================================================ */
 
-/**
- * @brief Crea un objeto que representa la placa con sus recursos configurados
- *
- * @return board_t Puntero al objeto de la placa
- */
-board_t BoardCreate(void);
+screen_t ScreenCreate(uint8_t digits);
+
+void ScreenWriteBCD(screen_t screen, uint8_t value[], uint8_t size);
+
+void ScreenRefresh(screen_t screen);
 
 /* === End of conditional blocks =================================================================================== */
 
@@ -81,4 +60,4 @@ board_t BoardCreate(void);
 }
 #endif
 
-#endif /* BSP_H_ */
+#endif /* SCREEN_H_ */
