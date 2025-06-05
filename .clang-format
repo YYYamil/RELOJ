@@ -8,10 +8,10 @@ AllowShortBlocksOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: false
 AllowShortLambdasOnASingleLine: false
+SortIncludes: false
 IndentCaseLabels: false
 ColumnLimit: 120
 AccessModifierOffset: -4
 FixNamespaceComments: false
 PointerAlignment: Middle
 AlignConsecutiveMacros: AcrossEmptyLinesAndComments
-
