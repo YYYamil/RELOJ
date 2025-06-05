@@ -40,12 +40,12 @@ extern "C" {
 
 /* === Public data type declarations =============================================================================== */
 
-//! Estructura que representa una salida digital
+//! Puntero opaco a Estructura que representa una salida digital
 typedef struct digital_output_s * digital_output_t;
 
-//! Estructura que representa una Entrada digital
+//! Puntero opaco a Estructura que representa una Entrada digital
 typedef struct digital_input_s * digital_input_t;
-//! Estructura que representa los estados posibles
+//! Constantes que representa los estado predefinidos
 typedef enum digital_states_e {
     DIGITAL_INPUT_WAS_DEACTIVATED = -1,
     DIGITAL_INPUT_WAS_NO_CHANGE = 0,
