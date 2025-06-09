@@ -17,57 +17,69 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 SPDX-License-Identifier: MIT
 *********************************************************************************************************************/
-#ifndef BSP_H_
-#define BSP_H_
 
-/** @file bsp.h
- ** @brief Configuraciones para soporte de placa de hardware
+#ifndef SCREEN_H_
+#define SCREEN_H_
+
+/** @file screen.h
+ ** @brief Declaraciones del modulo para la gestion de entrada y salidas digitales
  **/
 
+/* === Headers files inclusions ==================================================================================== */
+
+#include <stdbool.h>
+#include <stdint.h>
 
 /* === Header for C++ compatibility ================================================================================ */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-/* === Public macros definitions ==================================================================================== */
 
-#include "digital.h"
-#include "screen.h"
+/* === Public macros definitions =================================================================================== */
 
-#include <stdbool.h>
+
+#define SEGMENT_A (1 << 0)
+#define SEGMENT_B (1 << 1)
+#define SEGMENT_C (1 << 2)
+#define SEGMENT_D (1 << 3)
+#define SEGMENT_E (1 << 4)
+#define SEGMENT_F (1 << 5)
+#define SEGMENT_G (1 << 6)
+#define SEGMENT_P (1 << 7)
 
 
 /* === Public data type declarations =============================================================================== */
 
-/**
- * @brief Estructura que representa el objeto de la placa
- */
-typedef struct board_s * board_t;
 
-/**
- * @brief Estructura interna que representa la placa
- */
-struct board_s {
-    digital_output_t buzzer;
-    digital_input_t set_time;
-    digital_input_t set_alarm;
-    digital_input_t decrement;
-    digital_input_t increment;
-    digital_input_t accept;
-    digital_input_t cancel;
-    screen_t screen;
+typedef struct screen_s * screen_t;
 
-}const *const board_t;
+typedef void(* digits_turn_off_t)(void);
+
+typedef void(* segments_update_t)(uint8_t);
+typedef void(* digit_turn_on_t)(uint8_t);
+
+typedef struct screen_driver_s {
+    digits_turn_off_t DigitsTurnOff;
+    segments_update_t SegmentsUpdate;
+    digit_turn_on_t DigitTurnOn;
+   
+}const * screen_driver_t;
+
+
+DigitsTurnOff(void);   
+SegmentTurnUpdate(uint8_t);
+DigitTurnOn(uint8_t);
+
+/* === Public variable declarations ================================================================================ */
 
 /* === Public function declarations ================================================================================ */
 
-/**
- * @brief Crea un objeto que representa la placa con sus recursos configurados
- *
- * @return board_t Puntero al objeto de la placa
- */
-board_t BoardCreate(void);
+screen_t ScreenCreate(uint8_t digits);
+
+void ScreenWriteBCD(screen_t screen, uint8_t value[], uint8_t size);
+
+void ScreenRefresh(screen_t screen);
 
 /* === End of conditional blocks =================================================================================== */
 
@@ -75,4 +87,4 @@ board_t BoardCreate(void);
 }
 #endif
 
-#endif /* BSP_H_ */
+#endif /* SCREEN_H_ */

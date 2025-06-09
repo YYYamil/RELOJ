@@ -24,7 +24,6 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions =============================================================== */
 
 #include "bsp.h"
-#include "digital.h"
 #include <stdbool.h>
 
 /* === Public function implementation ========================================================= */
