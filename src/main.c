@@ -29,48 +29,36 @@ SPDX-License-Identifier: MIT
 /* === Public function implementation ========================================================= */
 
 int main(void) {
-    // Inicializar la placa
+    uint8_t value[4] = {1, 2, 3, 4};
     board_t board = BoardCreate();
 
-    int divisor = 0;
+    ScreenWriteBCD(board->screen, value, 4);
+    DisplayFlashDigits(board->screen, 2, 3, 50); // Corregido
 
     while (true) {
-        // Control del LED azul (LED_B) con TEC_1
-        if (DigitalInputGetIsActive(board->key_push)) { // Reemplaza Chip_GPIO_ReadPortBit == 0
-                                                        // DigitalOutputActivate(led_blue); //
-                                                        // Reemplazamos Chip_GPIO_SetPinState
-            DigitalOutputActivate(board->led_blue);
+        // Refrescar el display
+        ScreenRefresh(board->screen);
+
+        // Ejemplo: Activar zumbador con KEY_F1
+        if (DigitalInputGetIsActive(board->set_time)) {
+            DigitalOutputActivate(board->buzzer);
         } else {
-            DigitalOutputDeactivate(board->led_blue); // Reemplazamos Chip_GPIO_SetPinState
+            DigitalOutputDeactivate(board->buzzer);
         }
 
-        // Control del LED_1 con TEC_2
-        if (DigitalInputWasActivated(board->key_toggle)) {
-            DigitalOutputToggle(board->led_1); // Reemplazamos Chip_GPIO_SetPinToggle
+        // Ejemplo: Incrementar valor con KEY_F4
+        if (DigitalInputWasActivated(board->increment)) {
+            value[0] = (value[0] + 1) % 10;
+            ScreenWriteBCD(board->screen, value, 4);
         }
 
-        // Control del LED_2 con TEC_3 y TEC_4
-        if (DigitalInputGetIsActive(board->key_turn_on)) {
-            DigitalOutputActivate(board->led_2); // Reemplazamos Chip_GPIO_SetPinState
-        }
-        if (DigitalInputGetIsActive(board->key_turn_off)) {
-            DigitalOutputDeactivate(board->led_2); // Reemplazamos Chip_GPIO_SetPinState
-        }
-
-        divisor++;
-        if (divisor == 5) {
-            divisor = 0;
-
-            DigitalOutputToggle(board->led_green); // Led Verde parpadeando
-        }
-
-        for (int index = 0; index < 100; index++) {
-            for (int delay = 0; delay < 25000; delay++) {
-                __asm("NOP"); // estoy ejecutando 25millones de veces una funcion que no hace nada
+        // Retardo simple (mejorar con temporizador en el futuro)
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 2500; j++) {
+                __asm("NOP");
             }
         }
     }
     return 0;
 }
-
 /* === End of documentation ==================================================================== */

@@ -36,6 +36,7 @@ extern "C" {
 #include "screen.h"
 
 #include <stdbool.h>
+#include <stdint.h>
 
 
 /* === Public data type declarations =============================================================================== */
@@ -58,7 +59,7 @@ struct board_s {
     digital_input_t cancel;
     screen_t screen;
 
-}const *const board_t;
+};
 
 /* === Public function declarations ================================================================================ */
 

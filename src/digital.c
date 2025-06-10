@@ -24,7 +24,7 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions ==================================================================================== */
 
 #include "digital.h"
-#include "config.h"
+
 #include <chip.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -61,9 +61,9 @@ digital_output_t DigitalOutputCreate(uint8_t port, uint8_t pin) {
     if (self != NULL) {
         self->port = port;
         self->pin = pin;
-        Chip_SCU_PinMuxSet(port, pin, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC0);
-        Chip_GPIO_SetPinDIR(LPC_GPIO_PORT, port, pin, true);    // Configura como salida
-        Chip_GPIO_SetPinState(LPC_GPIO_PORT, port, pin, false); // Estado inicial apagado
+        // Chip_SCU_PinMuxSet(port, pin, SCU_MODE_INBUFF_EN | SCU_MODE_INACT | SCU_MODE_FUNC0);
+        // Chip_GPIO_SetPinDIR(LPC_GPIO_PORT, port, pin, true);    // Configura como salida
+        // Chip_GPIO_SetPinState(LPC_GPIO_PORT, port, pin, false); // Estado inicial apagado
     }
     return self;
 }

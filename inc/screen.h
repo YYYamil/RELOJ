@@ -54,32 +54,56 @@ extern "C" {
 
 typedef struct screen_s * screen_t;
 
-typedef void(* digits_turn_off_t)(void);
+// typedef void(* digits_turn_off_t)(void);
 
-typedef void(* segments_update_t)(uint8_t);
-typedef void(* digit_turn_on_t)(uint8_t);
+// typedef void(* segments_update_t)(uint8_t);
+// typedef void(* digit_turn_on_t)(uint8_t);
 
 typedef struct screen_driver_s {
-    digits_turn_off_t DigitsTurnOff;
-    segments_update_t SegmentsUpdate;
-    digit_turn_on_t DigitTurnOn;
-   
-}const * screen_driver_t;
+    void (*DigitsTurnOff)(void);
+    void (*SegmentsUpdate)(uint8_t);
+    void (*DigitTurnOn)(uint8_t);
+} const * screen_driver_t;
 
 
-DigitsTurnOff(void);   
-SegmentTurnUpdate(uint8_t);
-DigitTurnOn(uint8_t);
+// DigitsTurnOff(void);   
+// SegmentTurnUpdate(uint8_t);
+// DigitTurnOn(uint8_t);
 
 /* === Public variable declarations ================================================================================ */
 
 /* === Public function declarations ================================================================================ */
 
-screen_t ScreenCreate(uint8_t digits);
+/**
+ * @brief Crea un objeto pantalla con el número de dígitos especificado.
+ * @param digits Número de dígitos del display.
+ * @param driver Puntero al controlador de hardware.
+ * @return screen_t Puntero al objeto pantalla.
+ */
+screen_t ScreenCreate(uint8_t digits, screen_driver_t driver);
 
+/**
+ * @brief Escribe valores BCD en la pantalla.
+ * @param screen Puntero al objeto pantalla.
+ * @param value Arreglo de valores BCD.
+ * @param size Tamaño del arreglo.
+ */
 void ScreenWriteBCD(screen_t screen, uint8_t value[], uint8_t size);
-
+/**
+ * @brief Refresca la pantalla mostrando el dígito actual.
+ * @param screen Puntero al objeto pantalla.
+ */
 void ScreenRefresh(screen_t screen);
+
+/**
+ * @brief Función para hacer parpadear algunos dígitos de la pantalla
+ *
+ * @param display    Puntero al descriptor de la pantalla con la que se quiere operar
+ * @param from       Posición del primer dígito que se quiere hacer parpadear
+ * @param to         Posición del último dígito que se quiere hacer parpadear
+ * @param frecuency  Factor de división de la frecuencia de refresco para el parpadeo
+ */
+int DisplayFlashDigits(screen_t screen, uint8_t from, uint8_t to, uint16_t divisor);
 
 /* === End of conditional blocks =================================================================================== */
 
