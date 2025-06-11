@@ -27,7 +27,7 @@ typedef struct board_s * board_t;
  * @brief Estructura interna que representa la placa
  */
 struct board_s {
-    digital_output_t led_green;
+    /*digital_output_t led_green;
     digital_output_t led_blue;
     digital_output_t led_1;
     digital_output_t led_2;
@@ -35,7 +35,16 @@ struct board_s {
     digital_input_t key_push;
     digital_input_t key_toggle;
     digital_input_t key_turn_on;
-    digital_input_t key_turn_off;
+    digital_input_t key_turn_off;*/
+
+    digital_output_t buzzer;
+    digital_input_t set_time;
+    digital_input_t set_alarm;
+    digital_input_t decrement;
+    digital_input_t increment;
+    digital_input_t accept;
+    digital_input_t cancel;
+    display_t display;
 };
 
 /* === Public function declarations ================================================================================ */
